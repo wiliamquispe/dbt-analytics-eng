@@ -20,6 +20,6 @@ models:
       
   - name: fact_trips
     description: >
-      Taxi trips corresponding to both service zones (Green and yellow).
+      Taxi trips corresponding to both service zones (Taxi Green and Taxi yellow).
       The table contains records where both pickup and dropoff locations are valid and known zones. 
       Each record corresponds to a trip uniquely identified by tripid. 
