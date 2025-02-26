@@ -1,0 +1,42 @@
+{{
+    config(
+        materialized='table'
+    )
+}}
+
+with trips_unioned as (
+    select *
+    from {{ ref('fact_trips') }}
+)
+
+select trips_unioned.tripid, 
+    trips_unioned.vendorid, 
+    trips_unioned.service_type,
+    trips_unioned.ratecodeid, 
+    trips_unioned.pickup_locationid,
+    trips_unioned.pickup_borough,
+    trips_unioned.pickup_zone, 
+    trips_unioned.dropoff_locationid,
+    trips_unioned.dropoff_borough,
+    trips_unioned.dropoff_zone, 
+    trips_unioned.pickup_datetime, 
+    trips_unioned.dropoff_datetime, 
+    trips_unioned.store_and_fwd_flag, 
+    trips_unioned.passenger_count, 
+    trips_unioned.trip_distance, 
+    trips_unioned.trip_type, 
+    trips_unioned.fare_amount, 
+    trips_unioned.extra, 
+    trips_unioned.mta_tax, 
+    trips_unioned.tip_amount, 
+    trips_unioned.tolls_amount, 
+    trips_unioned.ehail_fee, 
+    trips_unioned.improvement_surcharge, 
+    trips_unioned.total_amount, 
+    trips_unioned.payment_type, 
+    trips_unioned.payment_type_description,
+    -- New time dimensions
+    EXTRACT(YEAR FROM trips_unioned.pickup_datetime) AS year,
+    EXTRACT(MONTH FROM trips_unioned.pickup_datetime) AS month
+from trips_unioned
+where trips_unioned.fare_amount > 0 AND trips_unioned.trip_distance > 0 AND trips_unioned.payment_type_description IN ('Cash', 'Credit Card')
