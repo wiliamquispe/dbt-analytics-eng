@@ -5,23 +5,20 @@
 }}
 
 with green_tripdata as (
-    select *,
-        'green' as service_type
+    select *, 
+        'Green' as service_type
     from {{ ref('stg_green_tripdata') }}
 ), 
-
 yellow_tripdata as (
-    select *,
-        'yellow' as service_type
+    select *, 
+        'Yellow' as service_type
     from {{ ref('stg_yellow_tripdata') }}
-),
+), 
 trips_unioned as (
-    select *
-    from green_tripdata 
-    union all
-    select * 
-    from yellow_tripdata
-),
+    select * from green_tripdata
+    union all 
+    select * from yellow_tripdata
+), 
 dim_zones as (
     select * from {{ ref('dim_zones') }}
     where borough != 'Unknown'
@@ -52,7 +49,7 @@ select trips_unioned.tripid,
     trips_unioned.total_amount, 
     trips_unioned.payment_type, 
     trips_unioned.payment_type_description
-from trips_unioned 
+from trips_unioned
 inner join dim_zones as pickup_zone
 on trips_unioned.pickup_locationid = pickup_zone.locationid
 inner join dim_zones as dropoff_zone
